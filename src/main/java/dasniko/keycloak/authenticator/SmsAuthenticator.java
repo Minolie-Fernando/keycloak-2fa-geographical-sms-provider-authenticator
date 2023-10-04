@@ -1,5 +1,6 @@
 package dasniko.keycloak.authenticator;
 
+import dasniko.keycloak.authenticator.Domain.User;
 import dasniko.keycloak.authenticator.gateway.SmsServiceFactory;
 import jakarta.ws.rs.core.Response;
 import org.keycloak.authentication.AuthenticationFlowContext;
@@ -31,7 +32,10 @@ public class SmsAuthenticator implements Authenticator {
 		UserModel user = context.getUser();
 
 		String mobileNumber = user.getFirstAttribute(MOBILE_NUMBER_FIELD);
-		// mobileNumber of course has to be further validated on proper format, country code, ...
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		String email = user.getEmail();
+		
 
 		int length = Integer.parseInt(config.getConfig().get(SmsConstants.CODE_LENGTH));
 		int ttl = Integer.parseInt(config.getConfig().get(SmsConstants.CODE_TTL));
@@ -46,8 +50,13 @@ public class SmsAuthenticator implements Authenticator {
 			Locale locale = session.getContext().resolveLocale(user);
 			String smsAuthText = theme.getMessages(locale).getProperty("smsAuthText");
 			String smsText = String.format(smsAuthText, code, Math.floorDiv(ttl, 60));
-
-			SmsServiceFactory.get(config.getConfig()).send(mobileNumber, smsText);
+            
+			User otpReceiver = new User();
+			otpReceiver.setEmail("email");
+			otpReceiver.setFirstName("firstName");
+			otpReceiver.setLastName("lastName");
+			otpReceiver.setPhoneNumber("+94123456789");
+			SmsServiceFactory.get(config.getConfig()).send(otpReceiver, smsText, "sms subejct");
 
 			context.challenge(context.form().setAttribute("realm", context.getRealm()).createForm(TPL_CODE));
 		} catch (Exception e) {

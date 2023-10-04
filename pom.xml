@@ -61,6 +61,11 @@
 			<groupId>com.google.auto.service</groupId>
 			<artifactId>auto-service</artifactId>
 		</dependency>
+		<dependency>
+           <groupId>org.json</groupId>
+           <artifactId>json</artifactId>
+           <version>20190722</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -71,7 +76,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven.compiler.version}</version>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>${maven.shade.version}</version>
@@ -91,7 +96,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 
